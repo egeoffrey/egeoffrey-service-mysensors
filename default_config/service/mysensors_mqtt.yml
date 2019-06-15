@@ -1,0 +1,4 @@
+hostname: localhost
+port: 1883
+publish_topic_prefix: mysensors-in
+subscribe_topic_prefix: mysensors-out

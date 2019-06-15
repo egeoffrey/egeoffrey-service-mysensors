@@ -1,0 +1,9 @@
+package: myhouse-service-mysensors
+revision: 1
+version: development
+git: myhouse-project/myhouse-service-mysensors
+modules:
+  - service/mysensors_serial
+  - service/mysensors_mqtt
+  - service/mysensors_ethernet
+
