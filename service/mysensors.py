@@ -114,7 +114,7 @@ class Mysensors(Service):
                 self.log_info("["+str(node_id)+"] logging: "+str(payload))
             elif type_string == "I_GATEWAY_READY":
                 # report gateway report
-                log_info("["+str(node_id)+"] reporting gateway ready")
+                self.log_info("["+str(node_id)+"] reporting gateway ready")
             elif type_string == "I_POST_SLEEP_NOTIFICATION":
                 # report awake
                 self.log_info("["+str(node_id)+"] reporting awake")
@@ -147,7 +147,7 @@ class Mysensors(Service):
         
     # What to do when running
     def on_start(self):
-        self.log_info("Starting mysensors serial gateway")
+        self.log_info("Starting mysensors gateway")
         # request all sensors' configuration so to filter sensors of interest
         self.add_configuration_listener("sensors/#")
         errors = 0
@@ -205,7 +205,7 @@ class Mysensors(Service):
             type_string = message.get("type")
             data = message.get("value")
             queue_size = message.get("queue_size") if message.has("queue_size") else None
-            if "queue_size" is None:
+            if queue_size is None:
                 # send the message directly
                 self.tx(node_id, child_id, command_string, type_string, data)
             else:

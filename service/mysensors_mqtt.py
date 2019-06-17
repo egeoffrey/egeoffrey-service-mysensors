@@ -31,9 +31,9 @@ class Mysensors_mqtt(Mysensors):
     # transmit a message to a sensor in the radio network
     def tx(self, node_id, child_id, command_string, type_string, payload, ack=0, system_message=False):
         # map the correspoding command and type
-        command = commands.index(command_string)
-        type = types[command].index(type_string)
-        ack_string = acks[ack]
+        command = self.commands.index(command_string)
+        type = self.types[command].index(type_string)
+        ack_string = self.acks[ack]
         if not system_message: self.log_info("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"] sending message: "+str(payload))
         # publish the payload to the mqtt broker
         topic = self.config["publish_topic_prefix"]+"/"+str(node_id)+"/"+str(child_id)+"/"+str(command)+"/"+str(ack)+"/"+str(type)

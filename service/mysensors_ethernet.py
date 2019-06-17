@@ -31,9 +31,9 @@ class Mysensors_ethernet(Mysensors):
     # transmit a message to a sensor in the radio network
     def tx(self, node_id, child_id, command_string, type_string, payload, ack=0, system_message=False):
         # map the correspoding command and type
-        command = commands.index(command_string)
-        type = types[command].index(type_string)
-        ack_string = acks[ack]
+        command = self.commands.index(command_string)
+        type = self.types[command].index(type_string)
+        ack_string = self.acks[ack]
         if not system_message: self.log_info("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"] sending message: "+str(payload))
         # prepare the message
         msg = str(node_id)+";"+str(child_id)+";"+str(command)+";"+str(ack)+";"+str(type)+";"+str(payload)+"\n"
@@ -49,9 +49,11 @@ class Mysensors_ethernet(Mysensors):
             # connect to the ethernet gateway
             self.log_info("Connecting to ethernet gateway on "+self.config["hostname"]+":"+str(self.config["port"]))
             self.gateway = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.gateway.connect((self.config["hostname"],self.config["port"]))
+            self.gateway.connect((self.config["hostname"], self.config["port"]))
+            return True
         except Exception,e:
             self.log_error("Unable to connect to the ethernet gateway: "+exception.get(e))
+            return False
             
     # read a single message from the gateway
     def read(self):
