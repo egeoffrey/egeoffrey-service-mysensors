@@ -1,7 +1,13 @@
 package: myhouse-service-mysensors
-revision: 2
+revision: 3
 version: development
-git: myhouse-project/myhouse-service-mysensors
+github: myhouse-project/myhouse-service-mysensors
+dockerhub: myhouse-project/myhouse-service-mysensors
+container_config:
+  devices:
+    - "/dev/ttyAMA0:/dev/ttyAMA0"
+description: Interact with a MySensors serial/ethernet/mqtt gateway
+tags: service mysensors mqtt serial
 modules:
   - service/mysensors_serial
   - service/mysensors_mqtt
