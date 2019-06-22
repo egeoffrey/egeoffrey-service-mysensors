@@ -2,7 +2,7 @@ package: myhouse-service-mysensors
 revision: 3
 version: development
 github: myhouse-project/myhouse-service-mysensors
-dockerhub: myhouse-project/myhouse-service-mysensors
+dockerhub: myhouseproject/myhouse-service-mysensors
 container_config:
   devices:
     - "/dev/ttyAMA0:/dev/ttyAMA0"
