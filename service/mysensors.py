@@ -33,8 +33,9 @@ class Mysensors(Service):
         self.types.append(["I_BATTERY_LEVEL","I_TIME","I_VERSION","I_ID_REQUEST","I_ID_RESPONSE","I_INCLUSION_MODE","I_CONFIG","I_FIND_PARENT","I_FIND_PARENT_RESPONSE","I_LOG_MESSAGE","I_CHILDREN","I_SKETCH_NAME","I_SKETCH_VERSION","I_REBOOT","I_GATEWAY_READY","I_SIGNING_PRESENTATION","I_NONCE_REQUEST","I_NONCE_RESPONSE","I_HEARTBEAT_REQUEST","I_PRESENTATION","I_DISCOVER_REQUEST","I_DISCOVER_RESPONSE","I_HEARTBEAT_RESPONSE","I_LOCKED","I_PING","I_PONG","I_REGISTRATION_REQUEST","I_REGISTRATION_RESPONSE","I_DEBUG","I_SIGNAL_REPORT_REQUEST","I_SIGNAL_REPORT_REVERSE","I_SIGNAL_REPORT_RESPONSE","I_PRE_SLEEP_NOTIFICATION","I_POST_SLEEP_NOTIFICATION"])
         self.types.append(["ST_FIRMWARE_CONFIG_REQUEST","ST_FIRMWARE_CONFIG_RESPONSE","ST_FIRMWARE_REQUEST","ST_FIRMWARE_RESPONSE","ST_SOUND","ST_IMAGE"])
         # require configuration before starting up
-        self.add_configuration_listener("house", True)
-        self.add_configuration_listener(self.fullname, True)
+        self.config_schema = 1
+        self.add_configuration_listener("house", 1, True)
+        self.add_configuration_listener(self.fullname, "+", True)
         # call subclass init
         self.sub_init()
 
@@ -149,7 +150,7 @@ class Mysensors(Service):
     def on_start(self):
         self.log_info("Starting mysensors gateway")
         # request all sensors' configuration so to filter sensors of interest
-        self.add_configuration_listener("sensors/#")
+        self.add_configuration_listener("sensors/#", 1)
         errors = 0
         while True:
             # connect to the configured gateway
@@ -220,12 +221,14 @@ class Mysensors(Service):
     # What to do when receiving a new/updated configuration for this module    
     def on_configuration(self,message):
         # we need units
-        if message.args == "house":
-            if not self.is_valid_module_configuration(["units"], message.get_data()): return False
+        if message.args == "house" and not message.is_null:
+            if not self.is_valid_configuration(["units"], message.get_data()): return False
             self.units = message.get("units")
         # module's configuration
-        if message.args == self.fullname:
-            if not self.is_valid_module_configuration(self.required_configuration, message.get_data()): return False
+        if message.args == self.fullname and not message.is_null:
+            if message.config_schema != self.config_schema: 
+                return False
+            if not self.is_valid_configuration(self.required_configuration, message.get_data()): return False
             self.config = message.get_data()
         # sensors to register
         elif message.args.startswith("sensors/"):

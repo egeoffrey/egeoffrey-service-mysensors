@@ -13,7 +13,7 @@
 #   optional: 
 # OUTBOUND: 
 # - controller/hub IN: 
-#   required: "node_id", "child_id", "command", "type", "value"
+#   required: "node_id", "child_id", "command", "type"
 #   optional: 
 
 import serial

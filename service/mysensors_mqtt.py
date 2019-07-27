@@ -82,7 +82,7 @@ class Mysensors_mqtt(Mysensors):
     def on_start(self):
         self.log_info("Starting mysensors MQTT gateway")
         # request all sensors' configuration so to filter sensors of interest
-        self.add_configuration_listener("sensors/#")
+        self.add_configuration_listener("sensors/#", 1)
         self.connect()
         # start loop (in the background)
         # TODO: reconnect
