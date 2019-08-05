@@ -5,6 +5,7 @@ container_config:
 description: Interact with a MySensors serial/ethernet/mqtt gateway
 dockerhub: myhouseproject/myhouse-service-mysensors
 github: myhouse-project/myhouse-service-mysensors
+icon: microchip
 manifest_schema: 2
 modules:
 - service/mysensors_serial:
@@ -215,6 +216,6 @@ modules:
         name: type
         required: true
 package: myhouse-service-mysensors
-revision: 5
+revision: 6
 tags: service mysensors mqtt serial
 version: 1.0
