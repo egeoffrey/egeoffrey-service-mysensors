@@ -10,6 +10,17 @@ manifest_schema: 2
 modules:
 - service/mysensors_serial:
     description: Interact with a MySensors serial gateway
+    module_configuration:
+    - description: The serial port the MySensors gateway is attached to
+      format: string
+      name: port
+      placeholder: /dev/mysensors
+      required: true
+    - description: The baud rate to use for communicating with the device
+      format: int
+      name: baud
+      placeholder: 9600
+      required: true
     service_configuration:
       active:
       - description: The unique identifier of the node
@@ -79,6 +90,37 @@ modules:
         required: true
 - service/mysensors_mqtt:
     description: Interact with a MySensors MQTT gateway
+    module_configuration:
+    - description: The MQTT hostname to connect to
+      format: string
+      name: hostname
+      placeholder: egeoffrey-gateway
+      required: true
+    - description: The port of the MQTT broker
+      format: int
+      name: port
+      placeholder: 1883
+      required: true
+    - description: The username for authenticating against the mqtt broker
+      format: string
+      name: username
+      placeholder: username
+      required: false
+    - description: The password for authenticating against the mqtt broker
+      format: password
+      name: password
+      placeholder: password
+      required: false
+    - description: The topic prefix to subscribe to
+      format: string
+      name: subscribe_topic_prefix
+      placeholder: mysensors-out
+      required: true
+    - description: The topic prefix to publish data into
+      format: string
+      name: publish_topic_prefix
+      placeholder: mysensors-in
+      required: true
     service_configuration:
       active:
       - description: The unique identifier of the node
@@ -148,6 +190,17 @@ modules:
         required: true
 - service/mysensors_ethernet:
     description: Interact with a MySensors ethernet gateway
+    module_configuration:
+    - description: The IP address or hostname running the MySensors gateway
+      format: string
+      name: hostname
+      placeholder: 192.168.0.230
+      required: true
+    - description: The port the gateway is listening to
+      format: int
+      name: port
+      placeholder: 5003
+      required: true
     service_configuration:
       active:
       - description: The unique identifier of the node
@@ -216,6 +269,6 @@ modules:
         name: type
         required: true
 package: egeoffrey-service-mysensors
-revision: 7
+revision: 8
 tags: service mysensors mqtt serial
 version: 1.0
