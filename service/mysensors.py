@@ -230,21 +230,9 @@ class Mysensors(Service):
                 return False
             if not self.is_valid_configuration(self.required_configuration, message.get_data()): return False
             self.config = message.get_data()
-        # sensors to register
-        elif message.args.startswith("sensors/"):
-            sensor_id = message.args.replace("sensors/","")
-            sensor = message.get_data()
-            # a sensor has been deleted
-            if message.is_null:
-                if sensor_id in self.sensors: del self.sensors[sensor_id]
-            # a sensor has been added/updated
+        # register/unregister the sensor
+        if message.args.startswith("sensors/"):
+            if message.is_null: 
+                sensor_id = self.unregister_sensor(message)
             else: 
-                # filter in only relevant sensors
-                # TODO: certificate, client_id, ssl
-                if "service" not in sensor or sensor["service"]["name"] != self.name or sensor["service"]["mode"] != "passive": return
-                configuration = sensor["service"]["configuration"]
-                if not self.is_valid_configuration(["node_id", "child_id", "command", "type"], configuration): return
-                # TODO: check command/type for valid values only
-                # keep track of the sensor's configuration
-                self.sensors[sensor_id] = configuration
-                self.log_info("registered sensor "+sensor_id)
+                sensor_id = self.register_sensor(message, ["node_id", "child_id", "command", "type"])
