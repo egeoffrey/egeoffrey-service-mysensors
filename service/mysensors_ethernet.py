@@ -62,6 +62,8 @@ class Mysensors_ethernet(Mysensors):
             line = ""
             while True:
                 c = self.gateway.recv(1)
+                # identify broken connections
+                if not c: return None
                 if c == '\n' or c == '': break
                 else: line += c
         except Exception,e:
