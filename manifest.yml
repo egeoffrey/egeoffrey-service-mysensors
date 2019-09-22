@@ -1,4 +1,4 @@
-branch: development
+branch: master
 container_config:
   devices:
   - /dev/ttyAMA0:/dev/ttyAMA0
@@ -269,6 +269,6 @@ modules:
         name: type
         required: true
 package: egeoffrey-service-mysensors
-revision: 14
+revision: 15
 tags: service mysensors mqtt serial
 version: 1.0
