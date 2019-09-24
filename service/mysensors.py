@@ -95,13 +95,21 @@ class Mysensors(Service):
             elif type_string == "I_ID_REQUEST":
                 # return the next available id
                 self.log_info("["+str(node_id)+"] requesting node_id")
-                # TODO: assigne ID
-                # get the available id
-                #id = self.get_available_id()
-                # store it into the database
-                #db.set(self.assigned_ids_key,id,sdk.python.utils.now())
-                # send it back
-                #self.tx(node_id,child_id,command_string,"I_ID_RESPONSE",str(id))
+                # we assume low node_id are assigned statically and we can manage the upper end
+                for id in range(100, 254):
+                    found = False
+                    # cycle over registered sensors
+                    for sensor_id in self.sensors:
+                        sensor = self.sensors[sensor_id]
+                        if id == sensor["node_id"]: 
+                            found = True
+                            break
+                    # if id is already registered, go to the next
+                    if found: continue
+                    # assign the id which is not allocated yet to the node
+                    else:
+                        self.tx(node_id, child_id, command_string, "I_ID_RESPONSE", str(id))
+                        break
             elif type_string == "I_CONFIG":
                 # return the controller's configuration
                 self.log_info("["+str(node_id)+"] requesting configuration")
