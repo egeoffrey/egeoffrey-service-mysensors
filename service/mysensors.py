@@ -73,28 +73,28 @@ class Mysensors(Service):
         # handle protocol messages
         if command_string == "PRESENTATION":
             # handle presentation messages
-            self.log_info("["+str(node_id)+"]["+str(child_id)+"] presented as "+type_string)
+            self.log_debug("["+str(node_id)+"]["+str(child_id)+"] presented as "+type_string)
         elif command_string == "SET":
             # handle set messages (messages from sensors handled below)
-            self.log_info("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"]: "+payload)
+            self.log_debug("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"]: "+payload)
         elif command_string == "REQ":
             # handle req messages
-            self.log_info("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"]: "+payload)
+            self.log_debug("["+str(node_id)+"]["+str(child_id)+"]["+command_string+"]["+type_string+"]: "+payload)
         elif command_string == "INTERNAL":
             # handle internal messages
             if type_string == "I_TIME":
                 # return the time as requested by the sensor
-                self.log_info("["+str(node_id)+"] requesting timestamp")
+                self.log_debug("["+str(node_id)+"] requesting timestamp")
                 self.tx(node_id, child_id, command_string, type_string, int(time.time()))
             elif type_string == "I_SKETCH_NAME":
                 # log the sketch name
-                self.log_info("["+str(node_id)+"] reported sketch name: "+str(payload))
+                self.log_debug("["+str(node_id)+"] reported sketch name: "+str(payload))
             elif type_string == "I_SKETCH_VERSION":
                 # log the sketch version
-                self.log_info("["+str(node_id)+"] reported sketch version: "+str(payload))
+                self.log_debug("["+str(node_id)+"] reported sketch version: "+str(payload))
             elif type_string == "I_ID_REQUEST":
                 # return the next available id
-                self.log_info("["+str(node_id)+"] requesting node_id")
+                self.log_debug("["+str(node_id)+"] requesting node_id")
                 # we assume low node_id are assigned statically and we can manage the upper end
                 for id in range(100, 254):
                     found = False
@@ -112,31 +112,31 @@ class Mysensors(Service):
                         break
             elif type_string == "I_CONFIG":
                 # return the controller's configuration
-                self.log_info("["+str(node_id)+"] requesting configuration")
+                self.log_debug("["+str(node_id)+"] requesting configuration")
                 metric = "I" if self.units == "imperial" else "M"
                 self.tx(node_id, child_id, command_string, type_string, metric)
             elif type_string == "I_BATTERY_LEVEL":
                 # log the battery level
-                self.log_info("["+str(node_id)+"] reporting battery level: "+str(payload)+"%")
+                self.log_debug("["+str(node_id)+"] reporting battery level: "+str(payload)+"%")
             elif type_string == "I_LOG_MESSAGE":
                 # log a custom message
-                self.log_info("["+str(node_id)+"] logging: "+str(payload))
+                self.log_debug("["+str(node_id)+"] logging: "+str(payload))
             elif type_string == "I_GATEWAY_READY":
                 # report gateway report
-                self.log_info("["+str(node_id)+"] reporting gateway ready")
+                self.log_debug("["+str(node_id)+"] reporting gateway ready")
             elif type_string == "I_POST_SLEEP_NOTIFICATION":
                 # report awake
-                self.log_info("["+str(node_id)+"] reporting awake")
+                self.log_debug("["+str(node_id)+"] reporting awake")
             elif type_string == "I_HEARTBEAT_RESPONSE" or type_string == "I_PRE_SLEEP_NOTIFICATION":
                 # handle smart sleep
-                self.log_info("["+str(node_id)+"] going to sleep")
+                self.log_debug("["+str(node_id)+"] going to sleep")
                 if node_id in self.queue and not self.queue[node_id].empty():
                     # process the queue 
                     while not self.queue[node_id].empty():
                         node_id, child_id, command_string, type_string, payload = self.queue[node_id].get()
                         # send the message
                         self.tx(node_id, child_id, command_string, type_string, payload)
-            else: self.log_info("["+str(node_id)+"] received "+type_string)
+            else: self.log_debug("["+str(node_id)+"] received "+type_string)
         elif command_string == "STREAM":
             # handle stream messages
             return
