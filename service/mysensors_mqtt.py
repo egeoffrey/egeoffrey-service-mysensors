@@ -48,10 +48,10 @@ class Mysensors_mqtt(Mysensors):
         # receive callback when conneting
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
-                log_debug("Connected to the MQTT gateway ("+str(rc)+")")
+                self.log_debug("Connected to the MQTT gateway ("+str(rc)+")")
                 # subscribe to topic
-                self.subscribe_topic(self.config["subscribe_topic_prefix"])
-                self.connected = True
+                self.subscribe_topic(self.config["subscribe_topic_prefix"]+"/#")
+                self.gateway_connected = True
             
         # receive a callback when receiving a message
         def on_message(client, userdata, msg):
@@ -67,6 +67,9 @@ class Mysensors_mqtt(Mysensors):
             
         # connect to the gateway
         self.gateway = mqtt.Client()
+        # set callbacks
+        self.gateway.on_connect = on_connect
+        self.gateway.on_message = on_message
         try: 
             self.log_info("Connecting to MQTT gateway on "+self.config["hostname"]+":"+str(self.config["port"]))
             password = self.config["password"] if "password" in self.config else ""
@@ -75,15 +78,12 @@ class Mysensors_mqtt(Mysensors):
         except Exception,e:
             self.log_warning("Unable to connect to the MQTT gateway: "+exception.get(e))
             return
-        # set callbacks
-        self.gateway.on_connect = on_connect
-        self.gateway.on_message = on_message
         
     # What to do when running
     def on_start(self):
         self.log_info("Starting mysensors MQTT gateway")
         # request all sensors' configuration so to filter sensors of interest
-        self.add_configuration_listener("sensors/#", 1)
+#        self.add_configuration_listener("sensors/#", 1)
         self.connect()
         # start loop (in the background)
         # TODO: reconnect
@@ -94,8 +94,9 @@ class Mysensors_mqtt(Mysensors):
     
     # What to do when shutting down
     def on_stop(self):
-        self.gateway.loop_stop()
-        self.gateway.disconnect()
+	if self.gateway is not None:
+	        self.gateway.loop_stop()
+	        self.gateway.disconnect()
  
     # subscribe to a mqtt topic
     def subscribe_topic(self, topic):
