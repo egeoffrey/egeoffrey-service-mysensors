@@ -269,6 +269,6 @@ modules:
         name: type
         required: true
 package: egeoffrey-service-mysensors
-revision: 18
+revision: 19
 tags: service mysensors mqtt serial
 version: 1.0

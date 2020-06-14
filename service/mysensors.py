@@ -237,6 +237,7 @@ class Mysensors(Service):
             if message.config_schema != self.config_schema: 
                 return False
             if not self.is_valid_configuration(self.required_configuration, message.get_data()): return False
+            if message.has("disabled") and message.get("disabled"): return False
             self.config = message.get_data()
         # register/unregister the sensor
         if message.args.startswith("sensors/"):
