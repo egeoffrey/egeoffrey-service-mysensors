@@ -58,7 +58,7 @@ class Mysensors_mqtt(Mysensors):
             try:
                 self.log_debug("received "+str(msg.topic)+": "+str(msg.payload))
                 # split the topic
-                topic, node_id, child_id, command, ack, type = msg.topic.split("/")
+                topic, node_id, child_id, command, ack, type = msg.topic.rsplit("/", 5)
             except Exception,e:
                 self.log_error("Invalid format ("+msg.topic+"): "+exception.get(e))
                 return
@@ -82,8 +82,7 @@ class Mysensors_mqtt(Mysensors):
     # What to do when running
     def on_start(self):
         self.log_info("Starting mysensors MQTT gateway")
-        # request all sensors' configuration so to filter sensors of interest
-#        self.add_configuration_listener("sensors/#", 1)
+        # connect to the mqtt broker
         self.connect()
         # start loop (in the background)
         # TODO: reconnect
