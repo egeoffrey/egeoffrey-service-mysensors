@@ -127,4 +127,4 @@ service mysensors mqtt serial
 
 ## Version
 
-The version of this egeoffrey-service-mysensors is 1.0-21 on the master branch.
+The version of this egeoffrey-service-mysensors is 1.1-1 on the master branch.
